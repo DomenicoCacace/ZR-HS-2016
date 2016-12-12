@@ -1,5 +1,3 @@
-/*rotates to the target location*/
-
 void rotateToPoint(float target[3]){
     float temp[3];
     getMyPos();
