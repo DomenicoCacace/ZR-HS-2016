@@ -46,7 +46,7 @@ void getRank(int num) {
             ranking[num]*=-100;
             break;
     }
-    if(dist(target, theirPos) < 0.2 && !packInTheirZone(num))
+    if(dist(target, theirPos) < 0.2 && packInTheirZone(num))
         ranking[num]*=-1;
 }
 
