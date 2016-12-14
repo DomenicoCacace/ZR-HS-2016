@@ -11,16 +11,17 @@ void worthyPack() {
 int itemStat(int num) {
     if(game.itemInZone(num))
         return 3;
-        
+
     if(packInTheirZone(num) && game.hasItem(num) == 0)
         return 4;
-        
+
     return(game.hasItem(num));
 }
 
 /* we check if the pack is in our or their zone to calculate the real rating of the item*/
 
 void getRank(int num) {
+    game.getItemZRState(itemState, num);
     float target[3];
     getMyPos();
     game.getItemLoc(target, num);
@@ -47,6 +48,8 @@ void getRank(int num) {
             break;
     }
     if(dist(target, theirPos) < 0.2 && packInTheirZone(num))
+        ranking[num]*=-1;
+    if(itemState[3] > 0.1 || itemState[4] > 0.1 || itemState[5] > 0.1)
         ranking[num]*=-1;
 }
 
