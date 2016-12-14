@@ -103,7 +103,7 @@ void loop(){
                 api.setPositionTarget(ourZone);
             else
                 api.setPositionTarget(ourZonePos);
-            if(dist(myPos, ourZone) < 0.2))
+            if(dist(myPos, ourZone) < 0.2)
                 ourZone[2]-= 0.2;
             if(packInZone()){
                 game.dropItem();
