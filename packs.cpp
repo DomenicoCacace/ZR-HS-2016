@@ -11,10 +11,10 @@ void worthyPack() {
 int itemStat(int num) {
     if(game.itemInZone(num))
         return 3;
-
+        
     if(packInTheirZone(num) && game.hasItem(num) == 0)
         return 4;
-
+        
     return(game.hasItem(num));
 }
 
@@ -29,7 +29,7 @@ void getRank(int num) {
     switch(num){
         case 0:   //large
         case 1:
-            ranking[num]*=2.0;
+            ranking[num]*=2.5;
             break;
         case 2:   //medium
         case 3:
@@ -47,10 +47,13 @@ void getRank(int num) {
             ranking[num]*=-100;
             break;
     }
-    if(dist(target, theirPos) < 0.2 && packInTheirZone(num))
+    if(dist(target, theirPos) < 0.1 && packInTheirZone(num))
         ranking[num]*=-1;
-    if(itemState[3] > 0.1 || itemState[4] > 0.1 || itemState[5] > 0.1)
+    game.getItemZRState(itemState, num);
+    if(itemState[3] > 0.001 || itemState[4] > 0.001 || itemState[5] > 0.001){
         ranking[num]*=-1;
+        DEBUG(("BLYAT CYKA PUTIN KURWA"));
+    }
 }
 
 /* the rating is based on distance and points/second that the item gives*/
@@ -73,14 +76,12 @@ void setDist(){
     switch(targetNumber){
         case 0:
         case 1:
-            //distFromTarget = .182;
             distFromTarget = .162;
             distMin = 0.151;
             distMax = 0.173;
             break;
         case 2:
         case 3:
-            //distFromTarget = .1725;
             distFromTarget = .143;
             distMin = 0.138;
             distMax = 0.160;
