@@ -24,15 +24,15 @@ void getRank(int num) {
     float target[3];
     getMyPos();
     game.getItemLoc(target, num);
-    ranking[num] = 1/(dist(myPos, target));
+    ranking[num] = 1/(((dist(myPos, target)*dist(myPos, target))));
     switch(num){
         case 0:   //large
         case 1:
-            ranking[num]*=4.5;
+            ranking[num]*=2.0;
             break;
         case 2:   //medium
         case 3:
-            ranking[num]*=2.5;
+            ranking[num]*=1.5;
             break;
     }
     switch(itemStat(num)){
@@ -46,6 +46,8 @@ void getRank(int num) {
             ranking[num]*=-100;
             break;
     }
+    if(dist(target, theirPos) < 0.2 && !packInTheirZone(num))
+        ranking[num]*=-1;
 }
 
 /* the rating is based on distance and points/second that the item gives*/
