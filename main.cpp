@@ -4,9 +4,10 @@ float   theirPos[3];
 float   itemState[12];          //state of the item
 float   itemAtt[3];             //attitude of the item
 float   pointAtt[3];            //point attitude
-float   second[3];                 //point to place SPS
+float   second[3];              //point to place SPS
 float   third[3];
 float   dropPos[3];
+float   dropZone[3];
 float   temp[3];
 
 float   virtualTarget[3];       //we calculate and fly to this point
@@ -52,7 +53,7 @@ void loop(){
         if(compareVector(ourZone, temp, 0.05))
             packsInZone++;
         }
-    if((game.getCurrentTime() >= 130 || packsInZone == 2) && index == 'p' )
+    if((game.getCurrentTime() >= 140 || packsInZone == 2) && index == 'p' )
         index = 'f';
     switch(index){
         /*we call worthyPack to see what is the worthiest pack to pick up. If we didn't place the SPS we will go to case F and place it, 
@@ -83,7 +84,7 @@ void loop(){
             else{
                 approachPack();
                 api.setAttitudeTarget(pointAtt);
-                //DEBUG(("%f", dist(myPos, actualTarget)));
+                DEBUG(("%f", dist(myPos, actualTarget)));
                 if(dist(myPos, actualTarget)<=distMax && dist(myPos, actualTarget) >= distMin && game.isFacingCorrectItemSide(targetNumber)){
                     if(game.dockItem(targetNumber) && game.hasItem(targetNumber) == 1){
                         game.dropSPS();
@@ -99,7 +100,7 @@ void loop(){
             rotateToPoint(ourZone);
                 api.setPositionTarget(ourZone);
             if((dist(dropPos, ourZone) < 0.2))
-                ourZone[2]-= 0.2;
+                assign(dropZone, ourZone[0], ourZone[1], ourZone[2] - 0.2);
             if(packInZone()){
                 game.dropItem();
                 index = 'p';
