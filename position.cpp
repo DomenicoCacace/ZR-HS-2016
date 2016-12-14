@@ -1,5 +1,3 @@
-//returns R or B based on our color
-
 char ourColor(){
     getMyPos();
     if(myPos[1] > 0)
@@ -8,7 +6,7 @@ char ourColor(){
         return 'R';
 }
 
-//gets info about assembly zones coordinates
+/*we learn our color. Is it relevant in alliance?*/
 
 void zoneInfo(){
     float zoneData[4];
@@ -17,20 +15,18 @@ void zoneInfo(){
     assign(theirZone, zoneData[0]*(-1), zoneData[1]*(-1), zoneData[2]*(-1));
 }
 
-
-//check if a pack is into our zone
+/*we get the location of our and their zone*/
 
 bool packInZone(){
     float temp[3];
     game.getItemLoc(temp, targetNumber);
     if(compareVector(temp, ourZone, 0.05))
         return true;
-    else
-        return false;
+    else 
+        return false; 
 }
 
-
-//check if a pack is into opponents' zone
+/*we check if a pack is in our zone or not*/
 
 bool packInTheirZone(int id){
     float temp[3];
@@ -41,10 +37,11 @@ bool packInTheirZone(int id){
         return false;
 }
 
-
-//get our position. Smooth af
+/*we check if a pack is in their zone or not*/
 
 void getMyPos() {
     api.getMyZRState(myState);
     copyArray(myState, myPos, 0, 3);
 }
+
+/*we get our position*/
