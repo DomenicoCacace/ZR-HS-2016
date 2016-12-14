@@ -52,13 +52,9 @@ void loop(){
         if(compareVector(ourZone, temp, 0.05))
             packsInZone++;
         }
-    if((game.getCurrentTime() >= 130 || packsInZone == 2) && index == 'w' )
+    if((game.getCurrentTime() >= 130 || packsInZone == 2) && index == 'p' )
         index = 'f';
     switch(index){
-        case 'w':
-            worthyPack();
-            index = 'p';
-            break;
         /*we call worthyPack to see what is the worthiest pack to pick up. If we didn't place the SPS we will go to case F and place it, 
         otherwise we will go for packs. we calculate here the virtual point or we would follow the pack if it starts moving*/
         case 's':
@@ -76,17 +72,18 @@ void loop(){
             else{
                 game.dropSPS();
                 zoneInfo();
-                index = 'w';
+                index = 'p';
             }
             break;
         /* */
         case 'p':
+            worthyPack();
             if(!calculated)
                 calcPoint();
             else{
                 approachPack();
                 api.setAttitudeTarget(pointAtt);
-                DEBUG(("%f", dist(myPos, actualTarget)));
+                //DEBUG(("%f", dist(myPos, actualTarget)));
                 if(dist(myPos, actualTarget)<=distMax && dist(myPos, actualTarget) >= distMin && game.isFacingCorrectItemSide(targetNumber)){
                     if(game.dockItem(targetNumber) && game.hasItem(targetNumber) == 1){
                         game.dropSPS();
@@ -95,8 +92,6 @@ void loop(){
                     }
                 }
             }
-            if(game.hasItem(targetNumber) == 2)
-                index = 'w';
             break;
         /*we calculate the approach point. if the pack is moving we return to worthyPack, otherwise we go and dock the item. The first
         dock will place the last SPS and get the ZoneInfo*/
@@ -107,7 +102,7 @@ void loop(){
                 ourZone[2]-= 0.2;
             if(packInZone()){
                 game.dropItem();
-                index = 'w';
+                index = 'p';
                 calculated = false;
             }
             break;
