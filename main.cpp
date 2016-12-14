@@ -5,6 +5,7 @@ float   itemAtt[3];             //attitude of the item
 float   pointAtt[3];            //point attitude
 float   second[3];                 //point to place SPS
 float   third[3];
+float   dropPos[3];
 
 float   virtualTarget[3];       //we calculate and fly to this point
 float   actualTarget[3];        //actual location of an item
@@ -20,7 +21,6 @@ float   ourZonePos[3];          //virtual point calculated to never fail the dro
 float   theirZone[3];           //they assembly zone
 
 char    index;                  //switch index
-bool    check;                  //check if SPS is placed
 bool    checkZone;              //check if we have the first item in zone
 bool    calculated;             //check if the virtualPoint is calculated
 short int     counter;                //counter used to fly around objects
@@ -29,7 +29,6 @@ void init(){
     getMyPos();
     index = 's';                //index starts here
     game.dropSPS();             //we drop the first SPS at our starting point
-    check = true;               //setting bools 
     checkZone = true;
     calculated = false;
     if(ourColor() == 'B'){
@@ -70,6 +69,7 @@ void loop(){
                 api.setPositionTarget(third);
             else{
                 game.dropSPS();
+                zoneInfo();
                 index = 'w';
             }
             break;
@@ -83,11 +83,8 @@ void loop(){
                 DEBUG(("%f", dist(myPos, actualTarget)));
                 if(dist(myPos, actualTarget)<=distMax && dist(myPos, actualTarget) >= distMin && game.isFacingCorrectItemSide(targetNumber)){
                     if(game.dockItem(targetNumber) && game.hasItem(targetNumber) == 1){
-                        if(check){
-                            game.dropSPS();
-                            zoneInfo();
-                            check = false;
-                        }
+                        game.dropSPS();
+                        assign(dropPos, myPos[0], myPos[1], myPos[2]);
                         index = 'z';
                     }
                 }
@@ -99,11 +96,11 @@ void loop(){
         dock will place the last SPS and get the ZoneInfo*/
         case 'z':
             rotateToPoint(ourZone);
-            if(checkZone)
+            if(checkZone)                                                       
                 api.setPositionTarget(ourZone);
             else
                 api.setPositionTarget(ourZonePos);
-            if(dist(myPos, ourZone) < 0.2)
+            if((dist(dropPos, ourZone) < 0.2))
                 ourZone[2]-= 0.2;
             if(packInZone()){
                 game.dropItem();
