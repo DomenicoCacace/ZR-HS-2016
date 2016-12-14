@@ -1,35 +1,37 @@
 float   myState[12];            //status of the sphere
 float   myPos[3];               //our position
+float   theirPos[3];
 float   itemState[12];          //state of the item
 float   itemAtt[3];             //attitude of the item
 float   pointAtt[3];            //point attitude
 float   second[3];                 //point to place SPS
 float   third[3];
 float   dropPos[3];
+float   temp[3];
 
 float   virtualTarget[3];       //we calculate and fly to this point
 float   actualTarget[3];        //actual location of an item
 float   distFromTarget;         //distance from our target
-short int     targetNumber;           //ID of the item
+int     targetNumber;           //ID of the item
 float   distMin;                //minimum distance of docking
 float   distMax;                //maximum distance of docking
 
 float   ranking[4];             //vector that is used to calculate which item is the worthiest
 
 float   ourZone[3];             //our assembly zone
-float   ourZonePos[3];          //virtual point calculated to never fail the drop in zone
 float   theirZone[3];           //they assembly zone
 
 char    index;                  //switch index
-bool    checkZone;              //check if we have the first item in zone
 bool    calculated;             //check if the virtualPoint is calculated
-short int     counter;                //counter used to fly around objects
+int     counter;                //counter used to fly around objects
+int     packsInZone;
 
 void init(){
+    packsInZone = 0;
     getMyPos();
+    getTheirPos();
     index = 's';                //index starts here
     game.dropSPS();             //we drop the first SPS at our starting point
-    checkZone = true;
     calculated = false;
     if(ourColor() == 'B'){
         assign(second, 0.0, 0.15, 0.60);
@@ -44,12 +46,16 @@ void init(){
 
 void loop(){
     getMyPos();                            //we get our position because we always need that information
-    if((game.getFuelRemaining() <= 20 || game.getCurrentTime() >= 150) && index == 'w')
+    packsInZone = 0;
+    for(int i = 0; i < 4; i++){
+        game.getItemLoc(temp, i);
+        if(compareVector(ourZone, temp, 0.05))
+            packsInZone++;
+        }
+    if((game.getCurrentTime() >= 130 || packsInZone == 2) && index == 'w' )
         index = 'f';
     switch(index){
         case 'w':
-            if(!checkZone)
-                setZonePoint();
             worthyPack();
             index = 'p';
             break;
@@ -96,16 +102,12 @@ void loop(){
         dock will place the last SPS and get the ZoneInfo*/
         case 'z':
             rotateToPoint(ourZone);
-            if(checkZone)                                                       
                 api.setPositionTarget(ourZone);
-            else
-                api.setPositionTarget(ourZonePos);
             if((dist(dropPos, ourZone) < 0.2))
                 ourZone[2]-= 0.2;
             if(packInZone()){
                 game.dropItem();
                 index = 'w';
-                checkZone = false;
                 calculated = false;
             }
             break;
