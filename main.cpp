@@ -110,6 +110,7 @@ void loop(){
         /*we drop the item in the zone. the first time we drop the item and calculate an universal dropping point*/
         case 'f':
             api.setPositionTarget(ourZone);
+            DEBUG(("VUÒ FA' CODICE E CODICE? PO PO PO PO PO PO"));
         break;
     }
 }
