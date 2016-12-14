@@ -40,8 +40,11 @@ bool packInTheirZone(int id){
 /*we check if a pack is in their zone or not*/
 
 void getMyPos() {
-    api.getMyZRState(myState);
-    copyArray(myState, myPos, 0, 3);
+    api.getMyZRState(myPos);
 }
 
 /*we get our position*/
+
+void getTheirPos(){
+    api.getOtherZRState(theirPos);
+}
