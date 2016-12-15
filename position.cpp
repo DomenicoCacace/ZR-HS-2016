@@ -37,14 +37,21 @@ bool packInTheirZone(int id){
         return false;
 }
 
+bool packIsMoving(int id){
+    game.getItemZRState(itemState, id);
+    return(itemState[3] != 0.00 || itemState[4] != 0.00 || itemState[5] != 0.00);
+}
+
 /*we check if a pack is in their zone or not*/
 
 void getMyPos() {
-    api.getMyZRState(myPos);
+    api.getMyZRState(myState);
+    for(int i = 0; i < 3; i++, myPos[i] = myState[i]);
 }
 
 /*we get our position*/
 
 void getTheirPos(){
-    api.getOtherZRState(theirPos);
+    api.getMyZRState(myState);
+    for(int i = 0; i < 3; i++, theirPos[i] = myState[i]);
 }
