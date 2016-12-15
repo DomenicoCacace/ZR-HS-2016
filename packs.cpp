@@ -25,11 +25,11 @@ void getRank(int num) {
     float target[3];
     getMyPos();
     game.getItemLoc(target, num);
-    ranking[num] = 1/(((dist(myPos, target)*dist(myPos, target))));
+    ranking[num] = 0.5/(((dist(myPos, target)*dist(myPos, target))));
     switch(num){
         case 0:   //large
         case 1:
-            ranking[num]*=2.5;
+            ranking[num]*=2;
             break;
         case 2:   //medium
         case 3:
@@ -41,18 +41,16 @@ void getRank(int num) {
             ranking[num]*=1;
             break;
         case 4:
-            ranking[num]*=1.75;
+            ranking[num]*=1.85;
             break;
         default:
-            ranking[num]*=-100;
+            ranking[num]=NULL;
             break;
     }
-    if(dist(target, theirPos) < 0.1 && packInTheirZone(num))
-        ranking[num]*=-1;
-    game.getItemZRState(itemState, num);
-    if(itemState[3] > 0.001 || itemState[4] > 0.001 || itemState[5] > 0.001){
-        ranking[num]*=-1;
-        DEBUG(("BLYAT CYKA PUTIN KURWA"));
+    if(dist(target, theirPos) < 0.1 && !packInTheirZone(num))
+        ranking[num]=NULL;
+    if(packIsMoving(num)){
+        ranking[num]=NULL;
     }
 }
 
@@ -70,7 +68,6 @@ void getWorthyPackInfo(){
     game.getItemLoc(actualTarget, targetNumber);
 }
 
-/*calculates the max valued pack */
 
 void setDist(){
     switch(targetNumber){
