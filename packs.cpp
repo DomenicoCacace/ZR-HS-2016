@@ -8,49 +8,20 @@ void worthyPack() {
 
 /*cumulative function to learn which pack is the worthiest*/
 
-int itemStat(int num) {
-    if(game.itemInZone(num))
-        return 3;
-        
-    if(packInTheirZone(num) && game.hasItem(num) == 0)
-        return 4;
-        
-    return(game.hasItem(num));
-}
-
-/* we check if the pack is in our or their zone to calculate the real rating of the item*/
 
 void getRank(int num) {
     game.getItemZRState(itemState, num);
     float target[3];
     getMyPos();
     game.getItemLoc(target, num);
-    ranking[num] = 0.5/(((dist(myPos, target)*dist(myPos, target))));
-    switch(num){
-        case 0:   //large
-        case 1:
-            ranking[num]*=2;
-            break;
-        case 2:   //medium
-        case 3:
-            ranking[num]*=1.5;
-            break;
-    }
-    switch(itemStat(num)){
-        case 0:
-            ranking[num]*=1;
-            break;
-        case 4:
-            ranking[num]*=1.85;
-            break;
-        default:
-            ranking[num]=NULL;
-            break;
-    }
-    if(dist(target, theirPos) < 0.1 && !packInTheirZone(num))
-        ranking[num]=NULL;
+    ranking[num] = 1/(((dist(myPos, target)*dist(myPos, target))));
+    if(num == 0 || num == 1)
+            ranking[num]*= 1.7;
+    if(game.itemInZone(num))
+        ranking[num] = NULL;
+    game.getItemZRState(itemState, num);
     if(packIsMoving(num)){
-        ranking[num]=NULL;
+        ranking[num] = NULL;
     }
 }
 
@@ -68,6 +39,7 @@ void getWorthyPackInfo(){
     game.getItemLoc(actualTarget, targetNumber);
 }
 
+/*calculates the max valued pack */
 
 void setDist(){
     switch(targetNumber){
