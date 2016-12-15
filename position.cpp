@@ -1,4 +1,5 @@
 char ourColor(){
+    getMyPos();
     if(myPos[1] > 0)
         return 'B';
     else
@@ -8,9 +9,9 @@ char ourColor(){
 /*we learn our color. Is it relevant in alliance?*/
 
 void zoneInfo(){
-    float zoneData[4];
     game.getZone(zoneData);
-    for(int i = 0; i < 3; i++, ourZone[i] = zoneData[i], theirZone[i] = -zoneData[i]);
+    assign(ourZone, zoneData[0], zoneData[1], zoneData[2]);
+    assign(theirZone, zoneData[0]*(-1), zoneData[1]*(-1), zoneData[2]*(-1));
 }
 
 /*we get the location of our and their zone*/
@@ -24,14 +25,17 @@ bool packIsMoving(int id){
 bool packInTheirZone(int id){
     float temp[3];
     game.getItemLoc(temp, id);
-    return(compareVector(temp, theirZone, 0.08));
+    if(compareVector(temp, theirZone, 0.08))
+        return true;
+    else
+        return false;
 }
 
 /*we check if a pack is in their zone or not*/
 
 void getMyPos() {
     api.getMyZRState(myState);
-    for(int i = 0; i < 3; i++, myPos[i] = myState[i]);
+    copyArray(myState, myPos, 0, 3);
 }
 
 /*we get our position*/
@@ -40,7 +44,10 @@ void getMyPos() {
 bool packInZone(){
     float temp[3];
     game.getItemLoc(temp, targetNumber);
-    return(compareVector(temp, ourZone, 0.055));
+    if(dist(temp, ourZone) < 0.22 - zoneData[3])
+        return true;
+    else 
+        return false; 
 }
 
 void calcPoint(){
