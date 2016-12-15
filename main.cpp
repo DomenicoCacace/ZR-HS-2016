@@ -4,6 +4,7 @@ float   itemState[12];          //state of the item
 float   itemAtt[3];             //attitude of the item
 float   pointAtt[3];            //point attitude
 float   sps[3];
+float   zoneData[4];
 
 float   virtualTarget[3];       //we calculate and fly to this point
 float   actualTarget[3];        //actual location of an item
@@ -29,10 +30,10 @@ void init(){
     game.dropSPS();             //we drop the first SPS at our starting point
     calculated = false;
     if(ourColor() == 'B'){
-        assign(sps, -0.45, 0.40, 0.0);
+        assign(sps, -0.40, 0.40, 0.0);
     }
     else{
-        assign(sps, 0.45, 0.40, 0.0);
+        assign(sps, 0.40, -0.40, 0.0);
     }
     first = true;
     setDist();
@@ -51,7 +52,9 @@ void loop(){
         
     if(packIsMoving(targetNumber) &&  game.getNumSPSHeld() == 0 && index != 'z')
         index = 'p';
-    switch(index){
+    if(game.hasItem(targetNumber) == 2)
+        index = 'p';
+        switch(index){
         /*we call worthyPack to see what is the worthiest pack to pick up. If we didn't place the SPS we will go to case F and place it, 
         otherwise we will go for packs. we calculate here the virtual point or we would follow the pack if it starts moving*/
         case 's':
