@@ -1,15 +1,6 @@
-char ourColor(){
-    getMyPos();
-    if(myPos[1] > 0)
-        return 'B';
-    else
-        return 'R';
-}
-
-/*we learn our color. Is it relevant in alliance?*/
-
 void zoneInfo(){
     game.getZone(zoneData);
+    //for(int i = 0; i < 3; i++, ourZone[i] = zoneData[i], theirZone[i] = -zoneData[i]);      //some memory more
     assign(ourZone, zoneData[0], zoneData[1], zoneData[2]);
     assign(theirZone, zoneData[0]*(-1), zoneData[1]*(-1), zoneData[2]*(-1));
 }
@@ -18,23 +9,21 @@ void zoneInfo(){
 
 
 bool packIsMoving(int id){
-    game.getItemZRState(itemState, id);
+    game.getItemZRState(itemState, targetNumber);
     return(itemState[3] != 0.00 || itemState[4] != 0.00 || itemState[5] != 0.00);
 }
 
 bool packInTheirZone(int id){
     float temp[3];
     game.getItemLoc(temp, id);
-    if(compareVector(temp, theirZone, 0.08))
-        return true;
-    else
-        return false;
+    return(compareVector(temp, theirZone, 0.08));
 }
 
 /*we check if a pack is in their zone or not*/
 
 void getMyPos() {
     api.getMyZRState(myState);
+    //for(int i = 0; i < 3; i++, myPos[i] = myState[i]);
     copyArray(myState, myPos, 0, 3);
 }
 
@@ -44,10 +33,7 @@ void getMyPos() {
 bool packInZone(){
     float temp[3];
     game.getItemLoc(temp, targetNumber);
-    if(dist(temp, ourZone) < 0.22 - zoneData[3])
-        return true;
-    else 
-        return false; 
+    return(compareVector(temp, ourZone, 0.05));
 }
 
 void calcPoint(){
@@ -67,3 +53,10 @@ void calcPoint(){
 }
 
 /*this function calculates the docking point based on the position, attitude and type of item*/
+
+bool rightSpeed(){
+    float myVel[3];
+    for(int i=0; i < 3; ++i)
+            myVel[i] = myState[i+3];
+    return(mathVecMagnitude(myVel, 3) < 0.01);
+}

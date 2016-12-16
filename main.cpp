@@ -29,7 +29,7 @@ void init(){
     index = 's';                //index starts here
     game.dropSPS();             //we drop the first SPS at our starting point
     calculated = false;
-    if(ourColor() == 'B'){
+    if(myPos[1]>0){
         assign(sps, -0.40, 0.40, 0.0);
     }
     else{
@@ -52,8 +52,10 @@ void loop(){
         
     if(packIsMoving(targetNumber) &&  game.getNumSPSHeld() == 0 && index != 'z')
         index = 'p';
-    if(game.hasItem(targetNumber) == 2)
+        
+    if(game.hasItem(targetNumber) == 2 || (packIsMoving(targetNumber) && index != 's'))
         index = 'p';
+        
         switch(index){
         /*we call worthyPack to see what is the worthiest pack to pick up. If we didn't place the SPS we will go to case F and place it, 
         otherwise we will go for packs. we calculate here the virtual point or we would follow the pack if it starts moving*/
@@ -77,7 +79,7 @@ void loop(){
             approachPack();
             api.setAttitudeTarget(pointAtt);
             DEBUG(("DIST FROM TARGET: %f", dist(myPos, actualTarget)));
-            if(dist(myPos, actualTarget)<=distMax && dist(myPos, actualTarget) >= distMin && game.isFacingCorrectItemSide(targetNumber)){
+            if(dist(myPos, actualTarget)<=distMax && dist(myPos, actualTarget) >= distMin && game.isFacingCorrectItemSide(targetNumber) && rightSpeed()){
                 if(game.dockItem(targetNumber) && game.hasItem(targetNumber) == 1){
                     if(first){
                         game.dropSPS();
