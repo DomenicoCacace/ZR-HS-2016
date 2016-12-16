@@ -1,8 +1,3 @@
-void copyArray(float *src, float *dest, int inPos, int dim){
-    for(int i = inPos;i < dim;i++)
-        dest[i]=src[i];
-}
-
 bool compareVector(float a[], float b[], float approx){
     if  (((a[0] < (b[0]+approx))&&(a[0] > (b[0]-approx))) &&
         ((a[1] < (b[1]+approx))&&(a[1] > (b[1]-approx))) &&

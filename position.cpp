@@ -1,8 +1,9 @@
 void zoneInfo(){
     game.getZone(zoneData);
-    //for(int i = 0; i < 3; i++, ourZone[i] = zoneData[i], theirZone[i] = -zoneData[i]);      //some memory more
-    assign(ourZone, zoneData[0], zoneData[1], zoneData[2]);
-    assign(theirZone, zoneData[0]*(-1), zoneData[1]*(-1), zoneData[2]*(-1));
+    for(int i = 0; i < 3; i++){
+         ourZone[i] = zoneData[i];
+         theirZone[i] = -zoneData[i];
+    }      //some memory more
 }
 
 /*we get the location of our and their zone*/
@@ -23,16 +24,16 @@ bool packInTheirZone(int id){
 
 void getMyPos() {
     api.getMyZRState(myState);
-    //for(int i = 0; i < 3; i++, myPos[i] = myState[i]);
-    copyArray(myState, myPos, 0, 3);
+    for(int i = 0; i < 3; i++)
+        myPos[i] = myState[i];
 }
 
 /*we get our position*/
 
 
-bool packInZone(){
+bool packInZone(int id){
     float temp[3];
-    game.getItemLoc(temp, targetNumber);
+    game.getItemLoc(temp, id);
     return(compareVector(temp, ourZone, 0.05));
 }
 

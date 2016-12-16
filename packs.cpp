@@ -17,7 +17,7 @@ void getRank(int num) {
     ranking[num] = 1/(((dist(myPos, target)*dist(myPos, target))));
     if(num == 0 || num == 1)
             ranking[num]*= 1.7;
-    if(game.itemInZone(num))
+    if(packInZone(targetNumber))
         ranking[num] = NULL;
     game.getItemZRState(itemState, num);
     if(packIsMoving(num)){

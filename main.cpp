@@ -50,7 +50,7 @@ void loop(){
     if((game.getCurrentTime() >= 155 || packsInZone == 2) && index == 'p' ) //if time is low or we have 2 packs we go def
         index = 'f'; 
         
-    if(packIsMoving(targetNumber) &&  game.getNumSPSHeld() == 0 && index != 'z')
+    if(packIsMoving(targetNumber) &&  game.getNumSPSHeld() == 0 && index != 'z')    //if we hit a pack
         index = 'p';
         
     if(game.hasItem(targetNumber) == 2 || (packIsMoving(targetNumber) && index != 's'))
@@ -96,7 +96,7 @@ void loop(){
             DEBUG(("GOING TO ZONE"));
             rotateToPoint(ourZone);
             moveTo(ourZone);
-            if(packInZone()){
+            if(packInZone(targetNumber)){
                 game.dropItem();
                 index = 'p';
                 calculated = false;
